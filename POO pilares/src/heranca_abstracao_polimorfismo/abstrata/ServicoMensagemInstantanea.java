@@ -1,4 +1,4 @@
-package heranca_abstracao.abstrata;
+package heranca_abstracao_polimorfismo.abstrata;
 
 public abstract class ServicoMensagemInstantanea {
     // Abstração ideia: Para você ser é preciso voce fazer

@@ -1,4 +1,4 @@
-package exemplo;
+package encapsulamento;
 
 public class Computador {
     public static void main(String[] args) {

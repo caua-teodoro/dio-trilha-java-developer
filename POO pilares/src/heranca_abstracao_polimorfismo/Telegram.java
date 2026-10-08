@@ -1,6 +1,6 @@
-package heranca_abstracao;
+package heranca_abstracao_polimorfismo;
 
-import heranca_abstracao.abstrata.ServicoMensagemInstantanea;
+import heranca_abstracao_polimorfismo.abstrata.ServicoMensagemInstantanea;
 
 public class Telegram extends ServicoMensagemInstantanea {
     @Override
