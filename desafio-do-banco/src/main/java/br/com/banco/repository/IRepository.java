@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IRepository<T> {
-    void cadastrar(Optional<T> obj);
+    void cadastrar(T obj);
 
     void remover(String obj);
 
@@ -12,7 +12,7 @@ public interface IRepository<T> {
 
     boolean existe(String obj);
 
-    void alterar(Optional<T> obj);
+    void alterar(T obj);
 
-    List<Optional<T>> listar();
+    List<T> listar();
 }

@@ -44,52 +44,51 @@ public class ContaService {
         } else {
             // Cliente não existe: cria, cadastra no banco (para ganhar o ID) e usa ele
             titular = new Cliente(nomeCliente, cpf);
-            repositoryCliente.cadastrar(Optional.of(titular));
+            repositoryCliente.cadastrar(titular);
         }
         Conta newConta = new Conta(num, titular, tipoConta, BigDecimal.ZERO);
-        this.repositoryConta.cadastrar(Optional.of(newConta));
+        this.repositoryConta.cadastrar(newConta);
         return newConta;
     }
 
     public void depositar(String numero, BigDecimal valor) {
         validarValorPositivo(valor);
-        Optional<Conta> conta = buscarConta(numero);
-        this.repositoryConta.depositar(numero, valor);
+        Optional<Conta> conta = Optional.of(buscarConta(numero));
+        conta.get().setSaldo(conta.get().getSaldo().add(valor));
+        this.repositoryConta.cadastrar(conta.get());
     }
 
     public void sacar(String numeroConta, BigDecimal valor) {
         validarValorPositivo(valor);
-        Optional<Conta> conta = buscarConta(numeroConta);
+        Optional<Conta> conta = Optional.of(buscarConta(numeroConta));
 
         if (conta.get().getSaldo().compareTo(valor) < 0) {
             throw new RegraDeNegocioException("Saldo insuficiente. Saldo atual: R$ " + conta.get().getSaldo());
         }
 
-        this.repositoryConta.sacar(numeroConta, valor);
+        conta.get().setSaldo(conta.get().getSaldo().subtract(valor));
+        this.repositoryConta.cadastrar(conta.get());
     }
 
     public void transferir(String numeroOrigem, String numeroDestino, BigDecimal valor) {
         if (numeroOrigem.equals(numeroDestino)) {
             throw new RegraDeNegocioException("A conta de destino não pode ser igual à conta de origem.");
         }
-        this.repositoryConta.transferir(valor, numeroOrigem, numeroDestino);
+        this.sacar(numeroOrigem, valor);
+        this.depositar(numeroOrigem, valor);
     }
 
     public Optional<Conta> consultarConta(String numeroConta) {
-        return buscarConta(numeroConta);
+        return Optional.of(buscarConta(numeroConta));
     }
 
-    public List<Optional<Conta>> listarContas() {
+    public List<Conta> listarContas() {
         return repositoryConta.listar();
     }
 
-    private Optional<Conta> buscarConta(String numero) {
-        try {
-            return repositoryConta.buscar(numero);
-        } catch (RegraDeNegocioException ex) {
-            throw new RegraDeNegocioException("Conta '" + numero + "' não encontrada.");
-        }
-
+    private Conta buscarConta(String numero) {
+        return repositoryConta.buscar(numero)
+                .orElseThrow(() -> new RegraDeNegocioException("Conta '" + numero + "' não encontrada."));
     }
 
     private void validarValorPositivo(BigDecimal valor) {

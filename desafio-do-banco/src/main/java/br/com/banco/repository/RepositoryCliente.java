@@ -14,14 +14,14 @@ import java.util.Optional;
 public class RepositoryCliente implements IRepositoryCliente {
 
     @Override
-    public void cadastrar(Optional<Cliente> cliente) {
+    public void cadastrar(Cliente cliente) {
         String sql = "INSERT INTO clientes (nome, cpf) VALUES (?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, cliente.get().getNome());
-            stmt.setString(2, cliente.get().getCpf());
+            stmt.setString(1, cliente.getNome());
+            stmt.setString(2, cliente.getCpf());
 
             // Envia o comando INSERT para o MySQL
             stmt.executeUpdate();
@@ -29,7 +29,7 @@ public class RepositoryCliente implements IRepositoryCliente {
             // Pega o ID gerado pelo AUTO_INCREMENT da tabela 'clientes' e preenche no objeto
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    cliente.get().setId(rs.getLong(1));
+                    cliente.setId(rs.getLong(1));
                 }
             }
 
@@ -77,13 +77,13 @@ public class RepositoryCliente implements IRepositoryCliente {
     }
 
     @Override
-    public List<Optional<Cliente>> listar() {
+    public List<Cliente> listar() {
         // TODO: Implementar
         return List.of();
     }
 
     @Override
-    public void alterar(Optional<Cliente> cliente) {
+    public void alterar(Cliente cliente) {
 
     }
 }

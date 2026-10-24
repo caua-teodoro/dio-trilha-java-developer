@@ -61,19 +61,19 @@ public class ContaController {
     }
 
     public String exibirResumoContas() {
-        List<Optional<Conta>> contas = contaService.listarContas();
+        List<Conta> contas = contaService.listarContas();
         if (contas.isEmpty()) {
             return "Nenhuma conta cadastrada no momento.";
         }
 
         StringBuilder sb = new StringBuilder("\n=== LISTA DE CONTAS ===\n");
-        for (Optional<Conta> c : contas) {
+        for (Conta c : contas) {
             sb.append(String.format("Conta: %s | Tipo: %s | Titular: %s (CPF: %s) | Saldo: R$ %.2f%n",
-                    c.get().getNumero(),
-                    c.get().getTipoConta().getDescricao(),
-                    c.get().getTitular().getNome(),
-                    c.get().getTitular().getCpf(),
-                    c.get().getSaldo()));
+                    c.getNumero(),
+                    c.getTipoConta().getDescricao(),
+                    c.getTitular().getNome(),
+                    c.getTitular().getCpf(),
+                    c.getSaldo()));
         }
         return sb.toString();
     }
